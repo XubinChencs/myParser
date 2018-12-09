@@ -1,4 +1,4 @@
-package org.xbchen.storage;
+package org.xbchen.DAO;
 
 import java.io.File;
 import java.io.FileNotFoundException;

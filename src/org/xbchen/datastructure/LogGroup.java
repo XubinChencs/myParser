@@ -3,8 +3,9 @@
 import java.util.HashSet;
 import java.util.Set;
 
+import org.xbchen.constant.ParseConstant;
+
 public class LogGroup {
-	private static final String DELIMITER = "\\s+";
 	private String[] eventSeq;
 	private Set<String> logIDs = new HashSet<String>();
 	
@@ -13,7 +14,7 @@ public class LogGroup {
 	}
 	
 	public LogGroup (String log, double ID) {
-		eventSeq = log.split(DELIMITER);
+		eventSeq = log.split(ParseConstant.PRIMARY_SEPARATOR);
 		logIDs.add(log);
 	}
 	
@@ -23,7 +24,7 @@ public class LogGroup {
 	}
 	
 	public double calSimilarity(String logData) {
-		String[] seq1 = logData.split(DELIMITER);
+		String[] seq1 = logData.split(ParseConstant.PRIMARY_SEPARATOR);
 		double cnt = 0;
 		for (int i = 0; i < min(seq1.length, eventSeq.length); i++) {
 			if (seq1[i].equals(eventSeq[i]) || eventSeq[i].equals("*")) {
@@ -36,7 +37,7 @@ public class LogGroup {
 	
 	public void update(String logData) {
 		logIDs.add(logData);
-		String[] seq1 = logData.split(DELIMITER);
+		String[] seq1 = logData.split(ParseConstant.PRIMARY_SEPARATOR);
 		for (int i = 0; i < min(seq1.length, eventSeq.length); i++) {
 			if (!seq1[i].equals(eventSeq[i])) {
 				eventSeq[i] = new String("*");

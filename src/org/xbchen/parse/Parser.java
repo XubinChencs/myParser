@@ -5,13 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.xbchen.DAO.DataOutput;
 import org.xbchen.datastructure.LogGroup;
 import org.xbchen.datastructure.Tree;
 import org.xbchen.datastructure.Tree.Node;
-import org.xbchen.storage.DataOutput;
 
 public class Parser {
 	private static final String DELIMITER = "\\s+";
@@ -95,15 +96,22 @@ public class Parser {
 		List<Node<String>> nodes = parser.tree.nodes;
 		DataOutput out = new DataOutput("F:\\drain");
 		int groupNum = 0;
+		//allGroups所有日志集合的列表
+		List<LogGroup> allGroups = new ArrayList<LogGroup>();
+		//按不同的日志集合输出分组的结果
 		for (int i = 0; i < nodes.size(); i++) {
 			if (nodes.get(i).getDepth() == 4) {
 				List<LogGroup> groupList = nodes.get(i).groupList;
 				for (int j = 0; j < groupList.size(); j++) {
+					allGroups.add(groupList.get(j));
 					groupNum++;
 					out.writeStrToFile("events.txt", groupList.get(j).toString());
 					out.outputByGroups(groupNum, groupList.get(j).getLogSet(), groupList.get(j).toString());
 				}
 			}
 		}
+		
+		
+		
 	}
 }
