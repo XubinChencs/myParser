@@ -10,5 +10,8 @@ public class Postprocessor {
 		return instance;
 	}
 	
+	public void combineGroups() {
+		
+	}
 	                  
 }
