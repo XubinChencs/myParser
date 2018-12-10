@@ -17,7 +17,8 @@ import org.xbchen.datastructure.Tree.Node;
 import org.xbchen.util.SystemHelper;
 
 public class Parser {
-	Tree<String> tree = new Tree<String>(null, 4, 10, 0.3);
+	private final static int MAX_DEPTH = 3;
+	Tree<String> tree = new Tree<String>(null, MAX_DEPTH, 10, 0.3);
 	String fileName = "F:\\log data\\windows-multi-2018.11.20.log";
 	
 	public Parser(){
@@ -103,7 +104,7 @@ public class Parser {
 		//按不同的日志集合输出分组的结果
 		SystemHelper.getInstance().getMemoryForWindows();
 		for (int i = 0; i < nodes.size(); i++) {
-			if (nodes.get(i).getDepth() == 4) {
+			if (nodes.get(i).getDepth() == MAX_DEPTH) {
 				List<LogGroup> groupList = nodes.get(i).groupList;
 				for (int j = 0; j < groupList.size(); j++) {
 					allGroups.add(groupList.get(j));
