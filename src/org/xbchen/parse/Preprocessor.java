@@ -23,7 +23,7 @@ public class Preprocessor {
 	
 	public String jsonProcessor(String str) {
 		JSONObject jo = new JSONObject(str);
-        String line = jo.getString("Message");
+        String line = jo.getString("message");
         return line;
 	}
 	

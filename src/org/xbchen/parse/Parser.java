@@ -17,9 +17,9 @@ import org.xbchen.datastructure.Tree.Node;
 import org.xbchen.util.SystemHelper;
 
 public class Parser {
-	private final static int MAX_DEPTH = 3;
+	private final static int MAX_DEPTH = 4;
 	Tree<String> tree = new Tree<String>(null, MAX_DEPTH, 10, 0.3);
-	String fileName = "F:\\log data\\windows-multi-2018.11.20.log";
+	String fileName = "F:\\log data\\act-test64-2018.11.20.log";
 	
 	public Parser(){
 
@@ -40,6 +40,10 @@ public class Parser {
 	private Node<String> traverse(String log){
 		Node<String> node;
 		String[] seq = log.split(ParseConstant.PRIMARY_SEPARATOR);
+		//对开头字符串就是数字的日志进行预处理
+		for (int i = 0; i < ((MAX_DEPTH - 2) <  seq.length ? (MAX_DEPTH - 2) : seq.length); i++) {
+			seq[i] = transformDigit(seq[i]);
+		}
 		String len = String.valueOf(seq.length);
 		node = tree.root().findChild(len);
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -51,21 +55,36 @@ public class Parser {
 			}
 		}
 		Node<String> child_node;
-		for (int i = 0; i < tree.getMaxDepth() - 2; i++) {
-			child_node = node.findChild(pattern.matcher(seq[i]).matches()?"*":seq[i]);
-			if (child_node == null) {
-				if (pattern.matcher(seq[i]).matches()) {
-					 child_node = tree.addNode("*", node);
-				}else child_node = tree.addNode(seq[i], node);
+		try {
+			for (int i = 0; i < ((MAX_DEPTH - 2) <  seq.length ? (MAX_DEPTH - 2) : seq.length); i++) {
+				child_node = node.findChild(pattern.matcher(seq[i]).matches()?"*":seq[i]);
 				if (child_node == null) {
-					System.err.println("分支数达最大，无匹配token");
-					return null;
+					if (pattern.matcher(seq[i]).matches()) {
+						 child_node = tree.addNode("*", node);
+					}else child_node = tree.addNode(seq[i], node);
+					if (child_node == null) {
+						System.err.println("分支数达最大，无匹配token");
+						return null;
+					}
 				}
+				node = child_node;
 			}
-			node = child_node;
+		}catch (Exception e){
+			System.out.println(log);
 		}
-		
 		return node;
+	}
+	
+	private String transformDigit(String token) {
+		char[] chars = token.toCharArray();
+		int count_num = 0;
+		for (int i = 0; i < chars.length; i++) {
+			if(chars[i] >= 48 && chars[i] <= 57){
+				count_num++;
+			}
+		}
+		if (count_num >= chars.length * 0.618) return "*";
+		return token;
 	}
 	
 	@SuppressWarnings("resource")
