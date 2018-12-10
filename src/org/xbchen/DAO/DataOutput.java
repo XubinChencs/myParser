@@ -17,7 +17,7 @@ public class DataOutput {
 			groupDirectory.mkdirs();
 		RandomAccessFile raf;
 		try {
-			raf = new RandomAccessFile(outDirectory + "\\group\\" + String.valueOf(groupNum) + ".txt", "rw");
+			raf = new RandomAccessFile(outDirectory + "\\group\\" + String.valueOf(groupNum) + ".log", "rw");
 			raf.seek(raf.length());
 			StringBuilder str = new StringBuilder(event);
 			str.append("\r\n");

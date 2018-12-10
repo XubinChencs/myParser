@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.xbchen.DAO.DataOutput;
+import org.xbchen.constant.ParseConstant;
 import org.xbchen.datastructure.LogGroup;
 import org.xbchen.datastructure.Tree;
 import org.xbchen.datastructure.Tree.Node;
+import org.xbchen.util.SystemHelper;
 
 public class Parser {
-	private static final String DELIMITER = "\\s+";
 	Tree<String> tree = new Tree<String>(null, 4, 10, 0.3);
-	String fileName = "windows-multi-2018.10.16.txt";
+	String fileName = "F:\\log data\\windows-multi-2018.11.20.log";
 	
 	public Parser(){
 
@@ -37,7 +38,7 @@ public class Parser {
 	
 	private Node<String> traverse(String log){
 		Node<String> node;
-		String[] seq = log.split(DELIMITER);
+		String[] seq = log.split(ParseConstant.PRIMARY_SEPARATOR);
 		String len = String.valueOf(seq.length);
 		node = tree.root().findChild(len);
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -68,6 +69,7 @@ public class Parser {
 	
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
+		SystemHelper.getInstance().getMemoryForWindows();
 		Parser parser = new Parser();
 		double cnt = 0;
 		long startTime=System.nanoTime();   //获取开始时间 
@@ -99,19 +101,17 @@ public class Parser {
 		//allGroups所有日志集合的列表
 		List<LogGroup> allGroups = new ArrayList<LogGroup>();
 		//按不同的日志集合输出分组的结果
+		SystemHelper.getInstance().getMemoryForWindows();
 		for (int i = 0; i < nodes.size(); i++) {
 			if (nodes.get(i).getDepth() == 4) {
 				List<LogGroup> groupList = nodes.get(i).groupList;
 				for (int j = 0; j < groupList.size(); j++) {
 					allGroups.add(groupList.get(j));
 					groupNum++;
-					out.writeStrToFile("events.txt", groupList.get(j).toString());
+					out.writeStrToFile("events.log", groupList.get(j).toString());
 					out.outputByGroups(groupNum, groupList.get(j).getLogSet(), groupList.get(j).toString());
 				}
 			}
 		}
-		
-		
-		
 	}
 }
